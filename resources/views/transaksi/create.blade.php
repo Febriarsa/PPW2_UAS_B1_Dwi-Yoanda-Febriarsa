@@ -1,4 +1,6 @@
+@extends('layouts')
 
+@section('content')
     <h2>Tambah Transaksi</h2>
     <div class="card">
         <div class="card-header bg-white">
@@ -10,7 +12,7 @@
                     <ul class="m-0">
                         @foreach ($errors->all() as $error)
                             <li>{{ $error }}</li>
-                        @endforeach
+                        @endforeach 
                     </ul>
                 </div>
             @endif
@@ -201,3 +203,4 @@
         });
     });
 </script>
+@endsection
