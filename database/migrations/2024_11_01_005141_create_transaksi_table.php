@@ -1,22 +1,23 @@
 <?php
-
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
+class CreateTransaksiTable extends Migration
 {
     /**
      * Run the migrations.
      */
     public function up(): void
     {
-        Schema:create('transaksi', function (Blueprint $table) {
+        Schema::create('transaksi', function (Blueprint $table) {
             $table->id();
             $table->date('tanggal_pembelian');
             $table->integer('total_harga');
             $table->integer('bayar');
             $table->integer('kembalian');
+            $table->softDeletes(); // Menambahkan kolom soft delete
+            $table->timestamps(); // Menambahkan kolom created_at dan updated_at
         });
     }
 
@@ -27,4 +28,4 @@ return new class extends Migration
     {
         Schema::dropIfExists('transaksi');
     }
-};
+}
