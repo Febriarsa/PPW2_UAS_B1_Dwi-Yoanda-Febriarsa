@@ -14,7 +14,7 @@ class TransaksiSeeder extends Seeder
      */
     public function run(): void
     {
-        $faker = Faker::create();
+        $faker = Faker::create(5);
 
         $startDate = Carbon::create(); // startDate = 2024-11-01
         $endDate = Carbon::create(); // endDate = 2024-11-10
