@@ -2,34 +2,44 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Transaksi;
 use App\Models\TransaksiDetail;
 use Illuminate\Http\Request;
 
-use App\Models\Transaksi;
-use Illuminate\Support\Facades\DB;
-
 class TransaksiDetailController extends Controller
 {
-    public function index()
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
     {
-        $transaksidetail = TransaksiDetail::with('transaksi')->orderBy('id','DESC')->get();
+        $transaksi = Transaksi::with('transaksidetail')->findOrFail($id);
 
-        return view('transaksidetail.index', );
+        return view('transaksidetail.detail', compact('transaksi'));
     }
 
-    public function detail(Request $request)
-    {
-        $transaksi = Transaksi::with('transaksidetail')->findOrFail($request->id_transaksi);
-
-        return view('transaksidetail.detail', );
-    }
-
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
     public function edit($id)
     {
         $transaksidetail = TransaksiDetail::findOrFail($id);
-        return view('transaksidetail.edit', );
+        return view('transaksidetail.edit', compact('transaksidetail'));
     }
 
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
     public function update(Request $request, $id)
     {
         $request->validate([
@@ -38,32 +48,9 @@ class TransaksiDetailController extends Controller
             'jumlah' => 'required|numeric',
         ]);
 
-        // Gunakan transaction
-        try {
-            $transaksidetail->nama_produk = $request->input('nama_produk');
-            $transaksidetail->harga_satuan = $request->input('harga_satuan');
-            $transaksidetail->jumlah = $request->input('jumlah');
-            $transaksidetail->subtotal = harga_satuan * jumlah
-
-            $transaksi->total_harga = sum subtotal
-            $transaksi->kembalian = bayar - total_harga; // hapus rumus
-
-            return redirect('transaksidetail/'.$transaksidetail->id_transaksi)->with('pesan', 'Berhasil mengubah data');
-        } catch (\Exception $e) {
-            DB::rollback();
-            return redirect()->back()->withErrors(['Transaction' => 'Gagal menambahkan data'])->withInput();
-        }
-    }
-
-    public function destroy()
-    {
         $transaksidetail = TransaksiDetail::findOrFail($id);
+        $transaksidetail->update($request->all());
 
-        $transaksi = Transaksi::with('transaksidetail')->findOrFail($transaksidetail->id_transaksi);
-        $transaksi->total_harga = sum subtotal;
-        $transaksi->kembalian = bayar - total_harga;
-        $transaksi->save();
-
-        return redirect('transaksidetail/'.$transaksidetail->id_transaksi)->with('pesan', 'Berhasil menghapus data');
+        return redirect()->route('transaksidetail.index')->with('success', 'Transaksi detail updated successfully');
     }
 }
